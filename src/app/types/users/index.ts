@@ -1,7 +1,5 @@
-export interface UserType {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-}
+import { z } from "zod";
+
+import { apiBodySchema } from "../api";
+
+export type UserType = z.infer<typeof apiBodySchema.shape.data.element>;

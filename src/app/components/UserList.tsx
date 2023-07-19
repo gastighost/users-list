@@ -9,8 +9,8 @@ import ApiErrorPopup from "./ApiErrorPopup";
 
 import api from "../common/api";
 
-import { UserType } from "../types/users";
 import { apiBodySchema } from "../types/api";
+import { UserType } from "../types/users";
 
 const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
