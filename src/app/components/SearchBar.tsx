@@ -8,7 +8,7 @@ interface SearchBarProps {
 const SearchBar = ({ input, onInputChange }: SearchBarProps) => {
   return (
     <form className="w-full max-w-sm">
-      <h3>Enter a first name!</h3>
+      <h3>Search by email, first name or last name!</h3>
       <div className="flex items-center border-b border-teal-500 py-2">
         <input
           className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"

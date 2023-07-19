@@ -31,10 +31,12 @@ const UserList = () => {
     try {
       const response = await api.getUsers(page);
 
-      const data = apiBodySchema.parse(response.data);
+      const { data: userData, total_pages } = apiBodySchema.parse(
+        response.data
+      );
 
-      setUsers((prevState) => [...prevState, ...data.data]);
-      setMaxPage(data.total_pages);
+      setUsers((prevState) => [...prevState, ...userData]);
+      setMaxPage(total_pages);
       closeModal();
     } catch (error) {
       openModal();
@@ -56,7 +58,15 @@ const UserList = () => {
   const regex = new RegExp(input, "i");
 
   const finalUsers =
-    input === "" ? users : users.filter((user) => regex.test(user.first_name));
+    input === ""
+      ? users
+      : users.filter(
+          (user) =>
+            regex.test(user.first_name) ||
+            regex.test(user.last_name) ||
+            regex.test(`${user.first_name} ${user.last_name}`) ||
+            regex.test(user.email)
+        );
 
   const usersList = finalUsers.map((user) => {
     const { id, email, first_name, last_name, avatar } = user;
