@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import LoadButton from "./LoadButton";
 import SearchBar from "./SearchBar";
+import ApiErrorPopup from "./ApiErrorPopup";
 
 import api from "../common/api";
 
@@ -16,6 +17,15 @@ const UserList = () => {
   const [maxPage, setMaxPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [input, setInput] = useState<string>("");
+  const [badDataModal, setBadDataModal] = useState<boolean>(false);
+
+  const openModal = () => {
+    setBadDataModal(true);
+  };
+
+  const closeModal = () => {
+    setBadDataModal(false);
+  };
 
   const getUsers = async (page: number) => {
     try {
@@ -25,13 +35,15 @@ const UserList = () => {
 
       setUsers((prevState) => [...prevState, ...data.data]);
       setMaxPage(data.total_pages);
+      closeModal();
     } catch (error) {
-      console.log("YOUR API DATA IS INVALID", error);
+      openModal();
     }
   };
 
   useEffect(() => {
     getUsers(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const nextPage = () => {
@@ -69,6 +81,7 @@ const UserList = () => {
         {usersList}
       </div>
       <LoadButton nextPage={nextPage} disabled={currentPage >= maxPage} />
+      {badDataModal && <ApiErrorPopup closeModal={closeModal} />}
     </div>
   );
 };
