@@ -1,25 +1,38 @@
 "use client";
 
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { AppDispatch, RootState } from "../store/store";
-import { fetchUsers } from "../store/users";
 
 import UserCard from "./UserCard";
 import LoadButton from "./LoadButton";
 import SearchBar from "./SearchBar";
 
-const UserList = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { users, maxPage } = useSelector((state: RootState) => state.users);
+import api from "../common/api";
 
+import { UserType } from "../types/users";
+import { apiBodySchema } from "../types/api";
+
+const UserList = () => {
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [maxPage, setMaxPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [input, setInput] = useState<string>("");
 
+  const getUsers = async (page: number) => {
+    try {
+      const response = await api.getUsers(page);
+
+      const data = apiBodySchema.parse(response.data);
+
+      setUsers((prevState) => [...prevState, ...data.data]);
+      setMaxPage(data.total_pages);
+    } catch (error) {
+      console.log("YOUR API DATA IS INVALID", error);
+    }
+  };
+
   useEffect(() => {
-    dispatch(fetchUsers(currentPage));
-  }, [dispatch, currentPage]);
+    getUsers(currentPage);
+  }, [currentPage]);
 
   const nextPage = () => {
     setCurrentPage((prevState) => (prevState += 1));
@@ -52,7 +65,9 @@ const UserList = () => {
   return (
     <div className="flex flex-col items-center py-4">
       <SearchBar input={input} onInputChange={onInputChange} />
-      <div className="flex flex-wrap justify-center ">{usersList}</div>
+      <div className="flex flex-wrap justify-center md:grid md:grid-cols-4 md:gap-4">
+        {usersList}
+      </div>
       <LoadButton nextPage={nextPage} disabled={currentPage >= maxPage} />
     </div>
   );

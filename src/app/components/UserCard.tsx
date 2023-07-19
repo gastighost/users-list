@@ -4,7 +4,7 @@ import { UserType } from "../types/users";
 
 const UserCard = ({ id, email, first_name, last_name, avatar }: UserType) => {
   return (
-    <div className="w-xs rounded overflow-hidden shadow-lg m-4">
+    <div className="w-xs rounded overflow-hidden shadow-lg m-4 w-52 ">
       <Image
         className="w-full"
         src={avatar}
@@ -12,9 +12,9 @@ const UserCard = ({ id, email, first_name, last_name, avatar }: UserType) => {
         width={200}
         height={200}
       />
-      <div className="px-6 py-4">
+      <div className="flex justify-center items-center flex-col px-6 py-4">
         <p className="text-gray-700 text-base">{id}</p>
-        <div className="font-bold text-xl mb-2">{email}</div>
+        <div className="font-bold text-sm mb-2">{email}</div>
         <p className="text-gray-700 text-base">
           {first_name} {last_name}
         </p>
