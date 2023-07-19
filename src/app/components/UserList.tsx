@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 import UserCard from "./UserCard";
 import LoadButton from "./LoadButton";
@@ -27,7 +27,7 @@ const UserList = () => {
     setBadDataModal(false);
   };
 
-  const getUsers = async (page: number) => {
+  const getUsers = useCallback(async (page: number) => {
     try {
       const response = await api.getUsers(page);
 
@@ -39,12 +39,11 @@ const UserList = () => {
     } catch (error) {
       openModal();
     }
-  };
+  }, []);
 
   useEffect(() => {
     getUsers(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [currentPage, getUsers]);
 
   const nextPage = () => {
     setCurrentPage((prevState) => (prevState += 1));
